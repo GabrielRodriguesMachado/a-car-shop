@@ -9,4 +9,10 @@ carsRouter.post(
     new CarController(req, res, next).create(),
 );
 
+carsRouter.get(
+  '/',
+  (req: Request, res: Response, next: NextFunction) =>
+    new CarController(req, res, next).findAll(),
+);
+
 export default carsRouter;
