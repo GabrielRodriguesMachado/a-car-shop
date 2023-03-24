@@ -15,6 +15,22 @@ class CarService {
 
     return newCar;
   }
+
+  public async findAll(): Promise<ICar[] | null> {
+    const allCars = await this._model.findAll();
+    const result = allCars.map((car) => ({
+      id: car.id,
+      model: car.model,
+      year: car.year,
+      color: car.color,
+      status: car.status,
+      buyValue: car.buyValue,
+      seatsQty: car.seatsQty,
+      doorsQty: car.doorsQty,
+    }));
+
+    return result;
+  }
 }
 
 export default CarService;
