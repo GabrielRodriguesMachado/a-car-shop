@@ -41,6 +41,14 @@ class CarService {
     if (!car) throw new ErrorClass(404, 'Car not found');
     return new Car(car).returnData();
   }
+
+  public async update(id: string, obj: ICar): Promise<ICar | null> {
+    if (!isValidObjectId(id)) throw new ErrorClass(422, 'Invalid mongo id');
+    const car = await this._model.update(id, obj);
+
+    if (!car) throw new ErrorClass(404, 'Car not found');
+    return new Car(car).returnData();
+  }
 }
 
 export default CarService;
