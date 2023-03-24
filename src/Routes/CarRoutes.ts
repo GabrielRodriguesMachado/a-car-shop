@@ -27,4 +27,10 @@ carsRouter.put(
     new CarController(req, res, next).update(),
 );
 
+carsRouter.delete(
+  '/:id',
+  (req: Request, res: Response, next: NextFunction) =>
+    new CarController(req, res, next).delete(),
+);
+
 export default carsRouter;
