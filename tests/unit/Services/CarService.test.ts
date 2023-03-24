@@ -9,6 +9,10 @@ describe('CarService', function () {
     sinon.restore();
   });
 
+  const carNotFound = 'Car not found';
+  const invalidMongoID = 'Invalid mongo id';
+  const invalidId = 'invalid-id';
+
   const carExample: ICar = {
     id: '507f1f77bcf86cd799439011',
     model: 'Example',
@@ -44,17 +48,16 @@ describe('CarService', function () {
 
   describe('findById', function () {
     it('should throw an error for invalid object ID', async function () {
-      const invalidId = 'invalid-id';
       const carService = new CarService(new CarODM());
 
       try {
         await carService.findById(invalidId);
       } catch (error) {
-        expect((error as Error).message).to.be.equal('Invalid mongo id');
+        expect((error as Error).message).to.be.equal(invalidMongoID);
       }
     });
 
-    it('should throw an error if car is not found', async function () {
+    it('should throw an error if a car is not found', async function () {
       const validId = '507f1f77bcf86cd799439011';
       sinon.stub(CarODM.prototype, 'findById').resolves(null);
       const carService = new CarService(new CarODM());
@@ -62,7 +65,7 @@ describe('CarService', function () {
       try {
         await carService.findById(validId);
       } catch (error) {
-        expect((error as Error).message).to.be.equal('Car not found');
+        expect((error as Error).message).to.be.equal(carNotFound);
       }
     });
 
@@ -80,14 +83,13 @@ describe('CarService', function () {
   describe('update', function () {
     const updatedCar = { ...carExample, color: 'Red' };
 
-    it('should throw an error for invalid object ID', async function () {
-      const invalidId = 'invalid-id';
+    it('should throw an error for a invalid object ID', async function () {
       const carService = new CarService(new CarODM());
 
       try {
         await carService.update(invalidId, carExample);
       } catch (error) {
-        expect((error as Error).message).to.be.equal('Invalid mongo id');
+        expect((error as Error).message).to.be.equal(invalidMongoID);
       }
     });
 
@@ -99,7 +101,7 @@ describe('CarService', function () {
       try {
         await carService.update(validId, updatedCar);
       } catch (error) {
-        expect((error as Error).message).to.be.equal('Car not found');
+        expect((error as Error).message).to.be.equal(carNotFound);
       }
     });
 
@@ -111,6 +113,40 @@ describe('CarService', function () {
       const result = await carService.update(validId, updatedCar);
 
       expect(result).to.deep.equal(updatedCar);
+    });
+  });
+
+  describe('delete', function () {
+    it('should throw an error for invalid object ID', async function () {
+      const carService = new CarService(new CarODM());
+
+      try {
+        await carService.delete(invalidId);
+      } catch (error) {
+        expect((error as Error).message).to.be.equal(invalidMongoID);
+      }
+    });
+
+    it('should throw an error if car is not found', async function () {
+      const validId = '507f1f77bcf86cd799439011';
+      sinon.stub(CarODM.prototype, 'delete').resolves(null);
+      const carService = new CarService(new CarODM());
+
+      try {
+        await carService.delete(validId);
+      } catch (error) {
+        expect((error as Error).message).to.be.equal(carNotFound);
+      }
+    });
+
+    it('should delete a car successfully', async function () {
+      const validId = '507f1f77bcf86cd799439011';
+      sinon.stub(CarODM.prototype, 'delete').resolves(carExample);
+      const carService = new CarService(new CarODM());
+
+      const result = await carService.delete(validId);
+
+      expect(result).to.deep.equal(carExample);
     });
   });
 });
