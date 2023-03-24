@@ -76,4 +76,41 @@ describe('CarService', function () {
       expect(result).to.deep.equal(carExample);
     });
   });
+
+  describe('update', function () {
+    const updatedCar = { ...carExample, color: 'Red' };
+
+    it('should throw an error for invalid object ID', async function () {
+      const invalidId = 'invalid-id';
+      const carService = new CarService(new CarODM());
+
+      try {
+        await carService.update(invalidId, carExample);
+      } catch (error) {
+        expect((error as Error).message).to.be.equal('Invalid mongo id');
+      }
+    });
+
+    it('should throw an error if car is not found', async function () {
+      const validId = '507f1f77bcf86cd799439011';
+      sinon.stub(CarODM.prototype, 'update').resolves(null);
+      const carService = new CarService(new CarODM());
+
+      try {
+        await carService.update(validId, updatedCar);
+      } catch (error) {
+        expect((error as Error).message).to.be.equal('Car not found');
+      }
+    });
+
+    it('should update a car successfully', async function () {
+      const validId = '507f1f77bcf86cd799439011';
+      sinon.stub(CarODM.prototype, 'update').resolves(updatedCar);
+      const carService = new CarService(new CarODM());
+
+      const result = await carService.update(validId, updatedCar);
+
+      expect(result).to.deep.equal(updatedCar);
+    });
+  });
 });
