@@ -1,6 +1,8 @@
+import { isValidObjectId } from 'mongoose';
 import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
 import CarODM from '../Models/CarODM';
+import ErrorClass from '../utils/ErrorClass';
 
 class CarService {
   private _model: CarODM;
@@ -30,6 +32,14 @@ class CarService {
     }));
 
     return result;
+  }
+
+  public async findById(id: string): Promise<ICar | null> {
+    if (!isValidObjectId(id)) throw new ErrorClass(422, 'Invalid mongo id');
+    const car = await this._model.findById(id);
+
+    if (!car) throw new ErrorClass(404, 'Car not found');
+    return new Car(car).returnData();
   }
 }
 
