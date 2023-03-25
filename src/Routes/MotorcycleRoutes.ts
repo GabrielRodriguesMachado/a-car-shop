@@ -9,4 +9,16 @@ motorcycleRouter.post(
     new MotorcycleController(req, res, next).create(),
 );
 
+motorcycleRouter.get(
+  '/',
+  (req: Request, res: Response, next: NextFunction) =>
+    new MotorcycleController(req, res, next).findAll(),
+);
+
+motorcycleRouter.get(
+  '/:id',
+  (req: Request, res: Response, next: NextFunction) =>
+    new MotorcycleController(req, res, next).findById(),
+);
+
 export default motorcycleRouter;
