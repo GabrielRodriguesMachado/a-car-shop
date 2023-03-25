@@ -26,6 +26,25 @@ class MotorcycleController {
       this.next(error);
     }
   }
+
+  public async findAll() {
+    try {
+      const allMotorcycles = await this.service.findAll();
+      return this.res.status(200).json(allMotorcycles);
+    } catch (error) {
+      this.next(error);
+    }
+  }
+
+  public async findById() {
+    try {
+      const { id } = this.req.params;
+      const motorcycle = await this.service.findById(id);
+      return this.res.status(200).json(motorcycle);
+    } catch (error) {
+      this.next(error);
+    }
+  }
 }
 
 export default MotorcycleController;
