@@ -43,6 +43,14 @@ class MotorcycleService {
     if (!motorcycle) throw new ErrorClass(404, this.motorcycleNotFound);
     return new Motorcycle(motorcycle).returnData();
   }
+
+  public async update(id: string, obj: IMotorcycle): Promise<IMotorcycle | null> {
+    if (!isValidObjectId(id)) throw new ErrorClass(422, this.invalidMongoID);
+    const motorcycle = await this._model.update(id, obj);
+
+    if (!motorcycle) throw new ErrorClass(404, this.motorcycleNotFound);
+    return new Motorcycle(motorcycle).returnData();
+  }
 }
 
 export default MotorcycleService;
