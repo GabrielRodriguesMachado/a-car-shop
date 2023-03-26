@@ -51,6 +51,14 @@ class MotorcycleService {
     if (!motorcycle) throw new ErrorClass(404, this.motorcycleNotFound);
     return new Motorcycle(motorcycle).returnData();
   }
+
+  public async delete(id: string): Promise<IMotorcycle | null> {
+    if (!isValidObjectId(id)) throw new ErrorClass(422, this.invalidMongoID);
+    const motorcycle = await this._model.delete(id);
+
+    if (!motorcycle) throw new ErrorClass(404, this.motorcycleNotFound);
+    return motorcycle;
+  }
 }
 
 export default MotorcycleService;
